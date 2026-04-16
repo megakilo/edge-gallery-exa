@@ -59,6 +59,7 @@
         if (!data.results || data.results.length === 0) {
           return { result: `No results found for query: "${query}"` };
         }
+        console.warning("response: " + data.results);
 
         // Format the results into a readable string for the LLM
         let output = `--- EXA SEARCH RESULTS for "${query}" ---\n`;
@@ -112,7 +113,7 @@
             output.substring(0, maxChars) +
             "\n\n... [TRUNCATED TO SAVE CONTEXT]";
         }
-        console.info(output);
+        console.warning("final output: " + output);
         return { result: output };
       }
 
@@ -129,14 +130,15 @@
                 "No Exa API key provided. Please enter your API key in the secret prompt.",
             });
           }
-
+          console.warning("entered the callback");
           const jsonData = JSON.parse(data);
-
+          console.warning("parsed data");
           if (!jsonData.query) {
             return JSON.stringify({
               error: "No query provided. Please specify a search query.",
             });
           }
+          console.warning("prepare query");
 
           const query = jsonData.query;
           const numResults = Math.min(
@@ -151,6 +153,7 @@
             category,
             secret
           );
+          console.warning("search complete");
           return JSON.stringify(searchResult);
         } catch (e) {
           console.error(e);
